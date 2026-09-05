@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomás David Honor — Espacio Personal & Creativo</title>
+    <meta name="description" content="Espacio personal de Tomás David Honor: Creación audiovisual con IA, narrativa visual, mentalidad de entrenador y exploración del mundo interior.">
+    <meta name="theme-color" content="#06080F">
+
+    <!-- Tipografías de Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        :root {
+            --bg-base: #06080F;
+            --surface-glass: rgba(14, 18, 28, 0.65);
+            --surface-glass-hover: rgba(22, 28, 44, 0.85);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --text-primary: #F8FAFC;
+            --text-muted: #94A3B8;
+            --glow-cyan: #38BDF8;
+            --glow-purple: #C084FC;
+            --glow-emerald: #34D399;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Barra de scroll personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #06080F;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(56, 189, 248, 0.2);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(56, 189, 248, 0.45);
+        }
+
+        body.scroll-locked {
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .font-mono-custom {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Gradientes y orbes de ambiente */
+        .ambient-glows {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .glow-sphere-1 {
+            position: absolute;
+            top: -10%;
+            left: 20%;
+            width: 650px;
+            height: 650px;
+            background: radial-gradient(circle, rgba(46, 127, 255, 0.16) 0%, transparent 70%);
+            filter: blur(80px);
+        }
+
+        .glow-sphere-2 {
+            position: absolute;
+            top: 45%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.13) 0%, transparent 70%);
+            filter: blur(95px);
+        }
+
+        .glow-sphere-3 {
+            position: absolute;
+            bottom: -10%;
+            left: -5%;
+            width: 650px;
+            height: 650px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.09) 0%, transparent 70%);
+            filter: blur(85px);
+        }
+
+        /* Canvas de rayos eléctricos */
+        #fx-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Spotlight interactivo con mouse */
+        #spotlight {
+            position: fixed;
+            width: 550px;
+            height: 550px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.08) 0%, rgba(6, 8, 15, 0) 70%);
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            display: none;
+            transition: opacity 0.3s ease;
+        }
+
+        @media (min-width: 992px) {
+            #spotlight { display: block; }
+        }
+
+        .font-signature {
+            font-family: 'Caveat', cursive;
+        }
+
+        /* Hero & Escena inicial */
+        .hero-stage {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4rem 1.5rem 2.5rem 1.5rem;
+            z-index: 10;
+            background: radial-gradient(circle at 50% 32%, rgba(18, 26, 46, 0.6) 0%, var(--bg-base) 80%);
+            transition: background 1.6s ease;
+        }
+
+        .hero-stage.is-intro {
+            background: var(--bg-base);
+        }
+
+        .emblem-stage {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            padding: 0.5rem;
+            transition: transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            outline: none;
+            user-select: none;
+        }
+
+        .emblem-stage:focus-visible {
+            border-radius: 50%;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.5);
+        }
+
+        .hero-stage.is-intro .emblem-stage {
+            transform: scale(2.05) translateY(4vh);
+        }
+
+        .intro-spark {
+            position: absolute;
+            width: 9px;
+            height: 9px;
+            background-color: #FFFFFF;
+            border-radius: 50%;
+            box-shadow: 0 0 20px 10px #00D4FF, 0 0 60px 30px #2E7FFF;
+            z-index: 20;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+        }
+
+        .hero-stage.is-intro .intro-spark {
+            opacity: 1;
+            animation: sparkPulse 2s infinite alternate ease-in-out;
+        }
+
+        @keyframes sparkPulse {
+            0% {
+                transform: scale(0.85);
+                opacity: 0.85;
+                box-shadow: 0 0 16px 6px #00D4FF, 0 0 45px 18px #2E7FFF;
+            }
+            100% {
+                transform: scale(1.25);
+                opacity: 1;
+                box-shadow: 0 0 28px 14px #00D4FF, 0 0 75px 38px #2E7FFF;
+            }
+        }
+
+        .hero-stage:not(.is-intro) .intro-spark {
+            transform: scale(16);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .emblem-volumetric-glow {
+            position: absolute;
+            width: 330px;
+            height: 390px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(46, 127, 255, 0.35) 0%, rgba(168, 85, 247, 0.15) 45%, transparent 70%);
+            filter: blur(45px);
+            animation: pulseGlow 4s infinite alternate ease-in-out;
+            pointer-events: none;
+            opacity: 1;
+            transition: opacity 2s ease;
+        }
+
+        .hero-stage.is-intro .emblem-volumetric-glow {
+            opacity: 0;
+            animation: none;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(0.92); opacity: 0.55; }
+            100% { transform: scale(1.18); opacity: 0.95; }
+        }
+
+        .th-dagger-logo {
+            width: 175px;
+            height: 250px;
+            filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 22px rgba(46, 127, 255, 0.28));
+            transition: filter 0.45s ease, transform 0.45s ease;
+            position: relative;
+            z-index: 3;
+        }
+
+        .hero-stage:not(.is-intro) .emblem-stage:hover .th-dagger-logo,
+        .hero-stage:not(.is-intro) .emblem-stage:focus-visible .th-dagger-logo {
+            filter: drop-shadow(0 25px 45px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 35px rgba(0, 212, 255, 0.65));
+        }
+
+        .hero-stage:not(.is-intro) .emblem-stage:hover,
+        .hero-stage:not(.is-intro) .emblem-stage:focus-visible {
+            transform: scale(1.05) translateY(-3px);
+        }
+
+        .logo-part {
+            transform-origin: 50% 50%;
+            transition: transform 1.6s cubic-bezier(0.16, 1, 0.3, 1),
+                        opacity 1.2s ease,
+                        filter 1.2s ease;
+        }
+
+        .hero-stage.is-intro .logo-part {
+            opacity: 0;
+            filter: blur(14px);
+        }
+
+        .hero-stage.is-intro .part-t { transform: translateY(-220px) scale(1.2); }
+        .hero-stage.is-intro .part-h-left { transform: translateX(-260px) translateY(100px) scale(0.8) rotate(-28deg); }
+        .hero-stage.is-intro .part-h-right { transform: translateX(260px) translateY(100px) scale(0.8) rotate(28deg); }
+        .hero-stage.is-intro .part-cross { transform: scale(0) translateZ(-100px); }
+
+        .hero-stage:not(.is-intro) .part-t { transition-delay: 0.1s; }
+        .hero-stage:not(.is-intro) .part-h-left { transition-delay: 0.25s; }
+        .hero-stage:not(.is-intro) .part-h-right { transition-delay: 0.4s; }
+        .hero-stage:not(.is-intro) .part-cross { transition-delay: 0.55s; }
+
+        .blue-charge-beam {
+            filter: drop-shadow(0 0 6px #00D4FF) drop-shadow(0 0 14px #2E7FFF);
+            animation: activeBeamPulse 2.8s ease-in-out infinite alternate;
+        }
+
+        .white-core-beam {
+            animation: whiteCoreFlicker 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes activeBeamPulse {
+            0% {
+                opacity: 0.85;
+                filter: drop-shadow(0 0 5px #00D4FF) drop-shadow(0 0 12px #0055FF);
+            }
+            50% {
+                opacity: 1;
+                filter: drop-shadow(0 0 9px #00F0FF) drop-shadow(0 0 22px #2E7FFF) drop-shadow(0 0 35px #00D4FF);
+            }
+            100% {
+                opacity: 0.9;
+                filter: drop-shadow(0 0 6px #00D4FF) drop-shadow(0 0 15px #0066FF);
+            }
+        }
+
+        @keyframes whiteCoreFlicker {
+            0%, 100% { opacity: 0.9; }
+            50% { opacity: 1; }
+            75% { opacity: 0.75; }
+        }
+
+        .hero-text-group {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            transition: opacity 1.5s cubic-bezier(0.25, 1, 0.5, 1) 1.2s,
+                        transform 1.5s cubic-bezier(0.25, 1, 0.5, 1) 1.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero-stage.is-intro .hero-text-group {
+            opacity: 0;
+            transform: translateY(45px) scale(0.96);
+            pointer-events: none;
+        }
+
+        .intro-scroll-hint {
+            position: absolute;
+            bottom: 6%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+        }
+
+        .hero-stage.is-intro .intro-scroll-hint {
+            opacity: 0.75;
+            animation: pulseHint 2.4s infinite ease-in-out 1.8s;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+
+        @keyframes pulseHint {
+            0%, 100% { transform: translateY(0); opacity: 0.6; }
+            50% { transform: translateY(6px); opacity: 1; }
+        }
+
+        .name-handwritten {
+            font-size: clamp(3.2rem, 8vw, 5.8rem);
+            font-weight: 700;
+            line-height: 1.05;
+            color: #FFFFFF;
+            letter-spacing: -0.01em;
+            text-shadow: 0 4px 22px rgba(0, 0, 0, 0.65), 0 0 32px rgba(96, 165, 250, 0.28);
+            transform: rotate(-1.5deg);
+            display: inline-block;
+            margin-bottom: 0.8rem;
+            transition: transform 0.35s ease, text-shadow 0.35s ease;
+        }
+
+        .name-handwritten:hover {
+            transform: rotate(0deg) scale(1.02);
+            text-shadow: 0 6px 30px rgba(56, 189, 248, 0.45), 0 0 35px rgba(255, 255, 255, 0.35);
+        }
+
+        /* Paneles Glassmorphism */
+        .glass-panel {
+            background: var(--surface-glass);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-panel:hover {
+            background: var(--surface-glass-hover);
+            border-color: rgba(56, 189, 248, 0.28);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), inset 0 0 20px rgba(56, 189, 248, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .timeline-trace {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.1) 12%, #2E7FFF 50%, rgba(168, 85, 247, 0.3) 88%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.35;
+        }
+
+        /* Gradientes de Texto */
+        .text-gradient-cyan {
+            background: linear-gradient(135deg, #FFFFFF 40%, #38BDF8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-gradient-purple {
+            background: linear-gradient(135deg, #FFFFFF 40%, #C084FC 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-gradient-emerald {
+            background: linear-gradient(135deg, #FFFFFF 40%, #34D399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .btn-portal {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.85rem;
+            padding: 1.05rem 2.2rem;
+            background: linear-gradient(135deg, #1E293B, #0F172A);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            border-radius: 14px;
+            color: #FFFFFF;
+            font-size: 0.85rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            font-weight: 600;
+            text-decoration: none;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            outline: none;
+        }
+
+        .btn-portal:hover,
+        .btn-portal:focus-visible {
+            border-color: #38BDF8;
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.35), inset 0 0 15px rgba(56, 189, 248, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .btn-portal-secondary {
+            border-color: rgba(168, 85, 247, 0.4);
+            background: linear-gradient(135deg, rgba(30, 27, 75, 0.8), rgba(15, 23, 42, 0.9));
+        }
+
+        .btn-portal-secondary:hover,
+        .btn-portal-secondary:focus-visible {
+            border-color: #C084FC;
+            box-shadow: 0 0 30px rgba(192, 132, 252, 0.35), inset 0 0 15px rgba(192, 132, 252, 0.15);
+        }
+
+        .reveal-node {
+            opacity: 0;
+            transform: translateY(35px);
+            transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-node.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Marco y retícula cinematográfica (4 en escritorio, 2x2 en móvil) */
+        .cinema-showcase-frame {
+            position: relative;
+            background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.05) 0%, rgba(13, 18, 31, 0.65) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 22px;
+            padding: 0.75rem;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        @media (min-width: 640px) {
+            .cinema-showcase-frame { padding: 1rem; }
+        }
+
+        @media (min-width: 1024px) {
+            .cinema-showcase-frame { padding: 1.25rem; }
+        }
+
+        .cinema-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem;
+        }
+
+        @media (min-width: 1024px) {
+            .cinema-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                gap: 1rem;
+            }
+        }
+
+        .reel-card {
+            position: relative;
+            aspect-ratio: 9 / 15;
+            width: 100%;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #090D18;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                        border-color 0.4s ease,
+                        box-shadow 0.4s ease,
+                        opacity 0.4s ease;
+            outline: none;
+        }
+
+        @media (min-width: 640px) {
+            .reel-card { border-radius: 16px; }
+        }
+
+        /* Enfoque cinematográfico al hacer hover en la retícula */
+        @media (min-width: 1024px) {
+            .cinema-showcase-frame:hover .reel-card {
+                opacity: 0.65;
+            }
+            .cinema-showcase-frame .reel-card:hover,
+            .cinema-showcase-frame .reel-card:focus-visible {
+                opacity: 1 !important;
+                transform: translateY(-5px) scale(1.025);
+                border-color: rgba(56, 189, 248, 0.48);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.85), 0 0 28px rgba(56, 189, 248, 0.28);
+                z-index: 10;
+            }
+        }
+
+        .reel-media {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.85) contrast(1.05);
+            transition: transform 0.6s ease, filter 0.6s ease;
+            background-color: #0d121f;
+        }
+
+        .reel-card:hover .reel-media,
+        .reel-card:focus-within .reel-media {
+            transform: scale(1.06);
+            filter: brightness(1) contrast(1.1);
+        }
+
+        .reel-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(6, 8, 15, 0.96) 0%, rgba(6, 8, 15, 0.5) 45%, transparent 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 0.85rem;
+            pointer-events: none;
+        }
+
+        @media (min-width: 640px) {
+            .reel-overlay { padding: 1.15rem; }
+        }
+
+        .card-sound-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(10, 14, 26, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            z-index: 30;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        @media (min-width: 640px) {
+            .card-sound-btn {
+                top: 12px;
+                right: 12px;
+                width: 36px;
+                height: 36px;
+            }
+        }
+
+        .card-sound-btn:hover {
+            background: rgba(56, 189, 248, 0.35);
+            border-color: #38BDF8;
+            color: #38BDF8;
+            transform: scale(1.08);
+            box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
+        }
+
+        .card-sound-btn.is-active {
+            background: #38BDF8;
+            border-color: #38BDF8;
+            color: #06080F;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.7);
+        }
+
+        /* Micro ecualizador animado en el botón con sonido activo */
+        .sound-wave-bars {
+            display: none;
+            gap: 2px;
+            align-items: flex-end;
+            height: 12px;
+        }
+        .card-sound-btn.is-active .sound-wave-bars {
+            display: flex;
+        }
+        .card-sound-btn.is-active .sound-static-icon {
+            display: none;
+        }
+        .sound-bar {
+            width: 2px;
+            background: #06080F;
+            border-radius: 1px;
+            animation: bounceWave 0.8s infinite ease-in-out alternate;
+        }
+        .sound-bar:nth-child(2) { animation-delay: 0.2s; }
+        .sound-bar:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes bounceWave {
+            0% { height: 3px; }
+            100% { height: 12px; }
+        }
+
+        .expand-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 0.2rem 0.55rem;
+            border-radius: 9999px;
+            background: rgba(10, 14, 26, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            font-size: 0.6rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: #94A3B8;
+            z-index: 25;
+            display: none;
+            align-items: center;
+            gap: 0.35rem;
+            opacity: 0;
+            transform: translateY(-4px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        @media (min-width: 640px) {
+            .expand-badge {
+                display: flex;
+                top: 12px;
+                left: 12px;
+            }
+        }
+
+        .reel-card:hover .expand-badge,
+        .reel-card:focus-visible .expand-badge {
+            opacity: 1;
+            transform: translateY(0);
+            color: #38BDF8;
+            border-color: rgba(56, 189, 248, 0.4);
+        }
+
+        /* Modal Cinematográfico */
+        #video-modal.is-active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #video-modal.is-active #modal-content {
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body class="selection:bg-sky-500 selection:text-white scroll-locked">
+
+    <!-- Orbes luminosos ambientales -->
+    <div class="ambient-glows" aria-hidden="true">
+        <div class="glow-sphere-1"></div>
+        <div class="glow-sphere-2"></div>
+        <div class="glow-sphere-3"></div>
+    </div>
+
+    <!-- Spotlight cursor & Canvas de Rayos -->
+    <div id="spotlight" aria-hidden="true"></div>
+    <canvas id="fx-canvas" aria-hidden="true"></canvas>
+
+    <!-- HEADER / HERO STAGE CON MONOGRAMA GEOMÉTRICO -->
+    <header class="hero-stage is-intro" id="hero-header">
+        
+        <!-- Disparador de entrada interactivo -->
+        <div class="emblem-stage" id="emblem-trigger" role="button" tabindex="0" aria-label="Ingresar al espacio de Tomás David Honor" title="Haz clic o desliza para ingresar">
+            <div class="intro-spark"></div>
+            <div class="emblem-volumetric-glow"></div>
+            
+            <svg class="th-dagger-logo" viewBox="0 0 420 580" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <defs>
+                    <linearGradient id="blueLaserEnergy" x1="268" y1="415" x2="268" y2="274" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#0038E2" />
+                        <stop offset="35%" stop-color="#0099FF" />
+                        <stop offset="70%" stop-color="#00F0FF" />
+                        <stop offset="100%" stop-color="#FFFFFF" />
+                    </linearGradient>
+
+                    <filter id="neonBeamGlow" x="-150%" y="-50%" width="400%" height="200%">
+                        <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur1" />
+                        <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur2" />
+                        <feMerge>
+                            <feMergeNode in="blur2" />
+                            <feMergeNode in="blur1" />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                    </filter>
+
+                    <linearGradient id="crossbarShade" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#94A3B8" />
+                        <stop offset="100%" stop-color="#475569" />
+                    </linearGradient>
+                </defs>
+
+                <g id="TH_Monogram_Faceted_Geometric">
+                    <!-- Travesaño de la H -->
+                    <g class="logo-part part-cross">
+                        <polygon points="232,274 266,274 266,298 232,298" fill="url(#crossbarShade)" />
+                        <line x1="232" y1="274" x2="266" y2="274" stroke="#CBD5E1" stroke-width="1.5" />
+                    </g>
+
+                    <!-- Columna Izquierda -->
+                    <g class="logo-part part-h-left">
+                        <polygon points="112,142 132,142 132,434 112,408" fill="#F8FAFC" />
+                        <polygon points="132,142 152,142 152,408 132,434" fill="#64748B" />
+                        <polygon points="106,142 112,142 112,154 106,142" fill="#E2E8F0" />
+                        <polygon points="158,142 152,142 152,154 158,142" fill="#475569" />
+                    </g>
+
+                    <!-- Columna Derecha con Láser Integrado -->
+                    <g class="logo-part part-h-right">
+                        <polygon points="266,142 286,142 286,434 266,408" fill="#94A3B8" />
+                        <polygon points="286,142 306,142 306,408 286,434" fill="#475569" />
+                        <polygon points="260,142 266,142 266,154 260,142" fill="#94A3B8" />
+                        <polygon points="312,142 306,142 306,154 312,142" fill="#334155" />
+
+                        <line x1="268" y1="274" x2="268" y2="415" stroke="#0066FF" stroke-width="14" stroke-linecap="round" opacity="0.4" filter="url(#neonBeamGlow)" />
+                        <line x1="268" y1="274" x2="268" y2="415" stroke="url(#blueLaserEnergy)" stroke-width="5" stroke-linecap="round" class="blue-charge-beam" />
+                        <line x1="268" y1="274" x2="268" y2="415" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" class="white-core-beam" />
+                    </g>
+
+                    <!-- La T / Daga Central -->
+                    <g class="logo-part part-t">
+                        <polygon points="76,64 210,64 210,102 96,102 96,118 76,128" fill="#FFFFFF" />
+                        <polygon points="210,64 344,64 344,128 324,118 324,102 210,102" fill="#94A3B8" />
+
+                        <polygon points="188,102 210,102 210,544 196,494 178,484 178,470 188,460" fill="#F1F5F9" />
+                        <polygon points="210,102 232,102 232,460 242,470 242,484 224,494 210,544" fill="#64748B" />
+
+                        <line x1="210" y1="64" x2="210" y2="544" stroke="#FFFFFF" stroke-width="1.2" opacity="0.9" />
+                    </g>
+                </g>
+            </svg>
+        </div>
+
+        <!-- Indicador interactivo de scroll inicial -->
+        <div class="intro-scroll-hint" id="intro-hint" role="button" tabindex="0">
+            <div class="w-[1px] h-12 bg-gradient-to-b from-sky-400 to-transparent"></div>
+            <span class="text-[10px] uppercase tracking-[0.3em] text-sky-400 font-mono-custom font-semibold">Toca o desliza</span>
+        </div>
+
+        <!-- Contenido principal del Hero -->
+        <div class="hero-text-group">
+            <div class="relative z-10">
+                <h1 class="name-handwritten font-signature">
+                    Tomás David Honor
+                </h1>
+            </div>
+
+            <p class="text-slate-300 text-sm sm:text-base max-w-xl font-light leading-relaxed px-4">
+                No vengo del código ni del deporte por separado — vengo de aprender a leer lo que pasa por dentro cuando todo aprieta. Hoy traduzco eso en proyectos, videos y páginas como esta.
+            </p>
+
+            <!-- Insignias de facetas -->
+            <div class="mt-8 flex flex-wrap justify-center items-center gap-4 sm:gap-6 text-xs font-mono-custom tracking-wider text-slate-400">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8]"></span>
+                    <span>Creación & IA</span>
+                </div>
+                <div class="w-1 h-1 bg-slate-700 rounded-full"></div>
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-purple-400 shadow-[0_0_8px_#c084fc]"></span>
+                    <span>Espacios de Expresión</span>
+                </div>
+                <div class="w-1 h-1 bg-slate-700 rounded-full"></div>
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]"></span>
+                    <span>Entrenador // 2018</span>
+                </div>
+            </div>
+
+            <!-- Accesos rápidos -->
+            <div class="mt-10 flex items-center gap-4">
+                <a href="#universo" class="text-xs font-mono-custom tracking-wider text-sky-400 hover:text-sky-300 flex items-center gap-1.5 transition-colors">
+                    <span>Entrar a mi universo</span>
+                    <span>↓</span>
+                </a>
+                <span class="text-slate-700">|</span>
+                <a href="portfolio.html" class="text-xs font-mono-custom tracking-wider text-slate-400 hover:text-purple-300 flex items-center gap-1.5 transition-colors group">
+                    <span>Ir al Portfolio</span>
+                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30 font-mono-custom">Próximamente</span>
+                    <span class="transform group-hover:translate-x-0.5 transition-transform">→</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- CUERPO PRINCIPAL DEL UNIVERSO -->
+    <main id="universo" class="max-w-5xl mx-auto px-6 py-28 flex flex-col gap-32 relative z-10">
+        <div class="timeline-trace"></div>
+
+        <!-- 01 // EL COSMOS MENTAL -->
+        <section class="reveal-node grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative">
+            <div class="lg:col-span-7 glass-panel p-8 sm:p-12 relative overflow-hidden">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="badge-pill bg-sky-500/10 border border-sky-500/30 text-sky-300">
+                        <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+                        <span>01 / El Cosmos Mental</span>
+                    </div>
+                    <span class="text-xs text-sky-400/80 font-mono-custom">Traducción Digital</span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-light text-gradient-cyan mb-6 leading-snug">
+                    Hacer visible lo que antes solo vivía en la imaginación.
+                </h2>
+                <p class="text-slate-300 text-sm sm:text-base font-light leading-relaxed mb-6">
+                    Siempre sentí que la mente alberga conceptos, atmósferas y narrativas que desbordan las palabras cotidianas. La inteligencia artificial no sustituye el sentir humano; funciona como el lente que por fin enfoca el destello interno. Cada pieza, video o línea de código es un intento genuino de traducir ese mundo interior a algo tangible.
+                </p>
+                <div class="flex items-center gap-6 pt-4 border-t border-white/5 text-xs text-slate-400 font-mono-custom">
+                    <div><span class="text-sky-400 font-semibold text-sm">Exploración</span> Continua</div>
+                    <div class="w-1 h-1 bg-slate-700 rounded-full"></div>
+                    <div><span class="text-sky-400 font-semibold text-sm">IA</span> Como Extensión</div>
+                </div>
+            </div>
+            
+            <div class="lg:col-span-5 glass-panel p-6 min-h-[320px] flex flex-col justify-between relative group" aria-hidden="true">
+                <div class="h-56 flex flex-col items-center justify-center relative p-6">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-sky-500/10 to-transparent rounded-2xl"></div>
+                    <svg viewBox="0 0 120 120" class="w-24 h-24 stroke-sky-400/80 fill-none group-hover:stroke-sky-200 transition-colors duration-500" stroke-width="1.5">
+                        <circle cx="60" cy="60" r="45" stroke-dasharray="3 3" class="opacity-40" />
+                        <path d="M 60,25 C 40,25 35,45 35,60 C 35,75 45,95 60,95 C 75,95 85,75 85,60 C 85,45 80,25 60,25 Z" />
+                        <line x1="60" y1="20" x2="60" y2="100" class="opacity-50" />
+                        <line x1="20" y1="60" x2="100" y2="60" class="opacity-50" />
+                        <circle cx="60" cy="60" r="4" fill="#38BDF8" />
+                    </svg>
+                    <span class="mt-4 text-[11px] font-mono-custom text-sky-300 tracking-wider">[ Imaginación & Estructura ]</span>
+                </div>
+                <div class="flex justify-between items-center pt-3 text-xs text-slate-400 border-t border-white/5 font-mono-custom">
+                    <span>Proceso</span><span class="text-sky-400">Intuición + Algoritmo</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE VIDEOS: RETÍCULA CINEMATOGRÁFICA DE 4 PANTALLAS -->
+        <section class="reveal-node relative">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+                <div>
+                    <div class="badge-pill bg-sky-500/10 border border-sky-500/30 text-sky-300 mb-3">
+                        <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+                        <span>Conexión de Ideas</span>
+                    </div>
+                    <h3 class="text-2xl sm:text-3xl font-light text-white">Donde las Ideas se Encuentran</h3>
+                    <p class="text-slate-400 text-xs sm:text-sm font-light mt-1 max-w-xl">
+                        Fragmentos de atmósferas y conceptos en constante movimiento. Activa el sonido individual o haz clic para expandir al reproductor.
+                    </p>
+                </div>
+                <div class="hidden sm:flex items-center gap-2 text-slate-400 font-mono-custom text-xs">
+                    <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
+                    <span class="text-[11px] tracking-wider uppercase">4 Piezas // Vista Panorámica</span>
+                </div>
+            </div>
+
+            <!-- Marco Cinematográfico Contenedor -->
+            <div class="cinema-showcase-frame">
+                <div class="cinema-grid">
+                    
+                    <!-- Tarjeta 1 -->
+                    <div class="reel-card group" data-video-src="videos/video-1.mp4" data-video-title="El Reflejo Virtual" data-video-tag="01 // Atmósfera" tabindex="0" role="button" aria-label="Abrir video: El Reflejo Virtual">
+                        <video class="reel-media inline-reel-video" src="videos/video-1.mp4" autoplay loop muted playsinline preload="metadata"></video>
+                        
+                        <button class="card-sound-btn" type="button" aria-label="Activar o silenciar audio" title="Audio">
+                            <span class="sound-static-icon">
+                                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 icon-muted pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                    <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                                    <line x1="23" y1="9" x2="17" y2="15"></line>
+                                    <line x1="17" y1="9" x2="23" y2="15"></line>
+                                </svg>
+                            </span>
+                            <div class="sound-wave-bars" aria-hidden="true">
+                                <span class="sound-bar"></span>
+                                <span class="sound-bar"></span>
+                                <span class="sound-bar"></span>
+                            </div>
+                        </button>
+
+                        <div class="expand-badge">
+                            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                            <span>Expandir</span>
+                        </div>
+
+                        <div class="reel-overlay">
+                            <span class="text-[9px] sm:text-[10px] font-mono-custom uppercase tracking-widest text-sky-400 mb-0.5">01 // Atmósfera</span>
+                            <h4 class="text-xs sm:text-sm lg:text-base font-semibold text-white leading-tight">El Reflejo Virtual</h4>
+                            <p class="text-[11px] text-slate-300 font-light mt-1 opacity-85 line-clamp-2 hidden sm:block">Exploración de avatar cinematográfico e introspección.</p>
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta 2 -->
+                    <div class="reel-card group" data-video-src="videos/video-2.mp4" data-video-title="Ruptura del Ruido" data-video-tag="02 // Mini Intro" tabindex="0" role="button" aria-label="Abrir video: Ruptura del Ruido">
+                        <video class="reel-media inline-reel-video" src="videos/video-2.mp4" autoplay loop muted playsinline preload="metadata"></video>
+                        
+                        <button class="card-sound-btn" type="button" aria-label="Activar o silenciar audio" title="Audio">
+                            <span class="sound-static-icon">
+                                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 icon-muted pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                    <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                                    <line x1="23" y1="9" x2="17" y2="15"></line>
+                                    <line x1="17" y1="9" x2="23" y2="15"></line>
+                                </svg>
+                            </span>
+                            <div class="sound-wave-bars" aria-hidden="true">
+                                <span class="sound-bar"></span>
+                                <span class="sound-bar"></span>
+                                <span class="sound-bar"></span>
+                            </div>
+                        </button>
+
+                        <div class="expand-badge">
+                            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                            <span>Expandir</span>
+                        </div>
+
+                        <div class="reel-overlay">
+                            <span class="text-[9px] sm:text-[10px] font-mono-custom uppercase tracking-widest text-purple-400 mb-0.5">02 // Mini Intro</span>
+                            <h4 class="text-xs sm:text-sm lg:text-base font-semibold text-white leading-tight">Ruptura del Ruido</h4>
+                            <p class="text-[11px] text-slate-300 font-light mt-1 opacity-85 line-clamp-2 hidden sm:block">Secuencia de apertura generada para piezas audiovisuales.</p>
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta 3 -->
+                    <div class="reel-card group" data-video-src="videos/video-3.mp4" data-video-title="Geometría Mental" data-video-tag="03 // Concepto" tabindex="0" role="button" aria-label="Abrir video: Geometría Mental">
+                        <video class="reel-media inline-reel-video" src="videos/video-3.mp4" autoplay loop muted playsinline preload="metadata"></video>
+                        
+                        <button class="card-sound-btn" type="button" aria-label="Activar o silenciar audio" title="Audio">
+                            <span class="sound-static-icon">
+                                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 icon-muted pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                    <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                                    <line x1="23" y1="9" x2="17" y2="15"></line>
+                                    <line x1="17" y1="9" x2="23" y2="15"></line>
+                                </svg>
+                            </span>
+                            <div class="sound-wave-bars" aria-hidden="true">
+                                <span class="sound-bar"></span>
+                                <span class="sound-bar"></span>
+                                <span class="sound-bar"></span>
+                            </div>
+                        </button>
+
+                        <div class="expand-badge">
+                            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                            <span>Expandir</span>
+                        </div>
+
+                        <div class="reel-overlay">
+                            <span class="text-[9px] sm:text-[10px] font-mono-custom uppercase tracking-widest text-emerald-400 mb-0.5">03 // Concepto</span>
+                            <h4 class="text-xs sm:text-sm lg:text-base font-semibold text-white leading-tight">Geometría Mental</h4>
+                            <p class="text-[11px] text-slate-300 font-light mt-1 opacity-85 line-clamp-2 hidden sm:block">Estructuras visuales que representan ideas complejas.</p>
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta 4 -->
+                    <div class="reel-card group" data-video-src="videos/video-4.mp4" data-video-title="Destello Creativo" data-video-tag="04 // Síntesis" tabindex="0" role="button" aria-label="Abrir video: Destello Creativo">
+                        <video class="reel-media inline-reel-video" src="videos/video-4.mp4" autoplay loop muted playsinline preload="metadata"></video>
+                        
+                        <button class="card-sound-btn" type="button" aria-label="Activar o silenciar audio" title="Audio">
+                            <span class="sound-static-icon">
+                                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 icon-muted pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                    <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                                    <line x1="23" y1="9" x2="17" y2="15"></line>
+                                    <line x1="17" y1="9" x2="23" y2="15"></line>
+                                </svg>
+                            </span>
+                            <div class="sound-wave-bars" aria-hidden="true">
+                                <span class="sound-bar"></span>
+                                <span class="sound-bar"></span>
+                                <span class="sound-bar"></span>
+                            </div>
+                        </button>
+
+                        <div class="expand-badge">
+                            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                            <span>Expandir</span>
+                        </div>
+
+                        <div class="reel-overlay">
+                            <span class="text-[9px] sm:text-[10px] font-mono-custom uppercase tracking-widest text-amber-400 mb-0.5">04 // Síntesis</span>
+                            <h4 class="text-xs sm:text-sm lg:text-base font-semibold text-white leading-tight">Destello Creativo</h4>
+                            <p class="text-[11px] text-slate-300 font-light mt-1 opacity-85 line-clamp-2 hidden sm:block">Experimentación estética con contrastes de luz y sombra.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 02 // LUCES, SOMBRAS & COMPLEMENTARIEDAD -->
+        <section class="reveal-node glass-panel p-8 sm:p-12 relative overflow-hidden">
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
+                <div>
+                    <div class="badge-pill bg-purple-500/10 border border-purple-500/30 text-purple-300 mb-4">
+                        <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+                        <span>02 / Vulnerabilidad & Conexión</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-light text-gradient-purple leading-snug">
+                        No soy una persona completa, sino complementaria.
+                    </h2>
+                </div>
+                <p class="text-slate-300 text-sm sm:text-base font-light max-w-lg leading-relaxed">
+                    Aceptar mis contradicciones me quitó el peso de fingir autosuficiencia. Las mejores cosas ocurren cuando mis fortalezas se cruzan con la mirada de otro.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-sky-400/40 transition-all">
+                    <span class="text-xs font-mono-custom text-sky-400 uppercase tracking-widest block mb-3">La Luz</span>
+                    <h3 class="text-lg font-medium text-white mb-2">Chispa Creativa</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed font-light">
+                        La intuición rápida, la pasión por ver conexiones donde otros ven puntos aislados, y el impulso imparable de materializar proyectos.
+                    </p>
+                </div>
+
+                <div class="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-purple-400/40 transition-all">
+                    <span class="text-xs font-mono-custom text-purple-400 uppercase tracking-widest block mb-3">La Sombra</span>
+                    <h3 class="text-lg font-medium text-white mb-2">El Silencio Incierto</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed font-light">
+                        Los momentos de duda, el cansancio mental de sobrepensar y la necesidad de pausar para no quemarme en mi propio fuego.
+                    </p>
+                </div>
+
+                <div class="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-emerald-400/40 transition-all">
+                    <span class="text-xs font-mono-custom text-emerald-400 uppercase tracking-widest block mb-3">El Encuentro</span>
+                    <h3 class="text-lg font-medium text-white mb-2">Ser Complementario</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed font-light">
+                        El alivio de no tener que saberlo todo. Buscar personas que aporten lo que a mí me falta y brindar con generosidad lo que yo traigo a la mesa.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 03 // YOUTUBE & LA HUELLA TEMPORAL (ENRIQUECIDA CON OPCIÓN 1) -->
+        <section class="reveal-node grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative">
+            <div class="lg:col-span-5 order-2 lg:order-1 glass-panel p-6 min-h-[320px] flex flex-col justify-between relative group" aria-hidden="true">
+                <div class="h-56 flex flex-col items-center justify-center relative p-6">
+                    <div class="absolute inset-0 bg-gradient-to-tl from-purple-500/10 to-transparent rounded-2xl"></div>
+                    <svg viewBox="0 0 120 120" class="w-24 h-24 stroke-purple-400/80 fill-none group-hover:stroke-purple-200 transition-colors duration-500" stroke-width="1.5">
+                        <circle cx="60" cy="60" r="46" stroke-dasharray="3 3" class="opacity-30" />
+                        <circle cx="60" cy="60" r="3" fill="#C084FC" />
+                        <line x1="60" y1="32" x2="60" y2="60" stroke-linecap="round" />
+                        <line x1="60" y1="60" x2="78" y2="68" stroke-linecap="round" />
+                        <rect x="22" y="32" width="76" height="56" rx="12" class="opacity-40" stroke-dasharray="4 2" />
+                    </svg>
+                    <span class="mt-4 text-[11px] font-mono-custom text-purple-300 tracking-wider">[ Cápsula Temporal // Huella Viva ]</span>
+                </div>
+                <div class="flex justify-between items-center pt-3 text-xs text-slate-400 border-t border-white/5 font-mono-custom">
+                    <span>Propósito</span><span class="text-purple-400">Trascender el Instante</span>
+                </div>
+            </div>
+
+            <div class="lg:col-span-7 order-1 lg:order-2 glass-panel p-8 sm:p-12 relative overflow-hidden">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="badge-pill bg-purple-500/10 border border-purple-500/30 text-purple-300">
+                        <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+                        <span>03 / La Memoria Viva</span>
+                    </div>
+                    <span class="text-xs text-purple-400/80 font-mono-custom">YouTube & Trascendencia</span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-light text-gradient-purple mb-6 leading-snug">
+                    La huella incrustada en el tiempo.
+                </h2>
+                <p class="text-slate-300 text-sm sm:text-base font-light leading-relaxed mb-4">
+                    Más que acumular vistas o perseguir algoritmos, entiendo cada video y cada línea de este sitio como una botella lanzada al mar digital. Aprovechar las herramientas de nuestra época es también una forma de trascender el instante: dejar una marca viva que resista el paso de los años.
+                </p>
+                <p class="text-slate-300 text-sm sm:text-base font-light leading-relaxed mb-6">
+                    Me conmueve pensar en volver a estos registros dentro de diez años y encontrarme con las preguntas que me desvelaban, las batallas que libraba y los mensajes que necesitaba gritarle al mundo. No busco registrar la perfección, sino el testimonio honesto de quién me estaba convirtiendo mientras construía mi camino.
+                </p>
+                <div class="flex items-center gap-6 pt-4 border-t border-white/5 text-xs text-slate-400 font-mono-custom">
+                    <div><span class="text-purple-400 font-semibold text-sm">Cápsula</span> Testimonio Vivo</div>
+                    <div class="w-1 h-1 bg-slate-700 rounded-full"></div>
+                    <div><span class="text-purple-400 font-semibold text-sm">Tiempo</span> Mirada en 10 Años</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 04 // LA CANCHA VITAL (TENIS) -->
+        <section class="reveal-node grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative">
+            <div class="lg:col-span-7 glass-panel p-8 sm:p-12 relative overflow-hidden">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="badge-pill bg-emerald-500/10 border border-emerald-500/30 text-emerald-300">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                        <span>04 / El Cimiento</span>
+                    </div>
+                    <span class="text-xs text-emerald-400/80 font-mono-custom">Entrenador Nacional // 2018</span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-light text-gradient-emerald mb-6 leading-snug">
+                    La cancha me enseñó a leer el alma bajo presión.
+                </h2>
+                <p class="text-slate-300 text-sm sm:text-base font-light leading-relaxed mb-6">
+                    El tenis nunca fue solo técnica o potencia física: es una radiografía del carácter humano. En un punto de quiebre nadie puede fingir quién es. Mi certificación en 2018 y los años en cancha me dejaron la templanza, la lectura gestual y la convicción de que la serenidad interna siempre le gana al caos exterior.
+                </p>
+                <div class="flex items-center gap-6 pt-4 border-t border-white/5 text-xs text-slate-400 font-mono-custom">
+                    <div><span class="text-emerald-400 font-semibold text-sm">Presencia</span> En el Presente</div>
+                    <div class="w-1 h-1 bg-slate-700 rounded-full"></div>
+                    <div><span class="text-emerald-400 font-semibold text-sm">Temple</span> Estratégico</div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5 glass-panel p-6 min-h-[320px] flex flex-col justify-between relative group" aria-hidden="true">
+                <div class="h-56 flex flex-col items-center justify-center relative p-6">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-emerald-500/10 to-transparent rounded-2xl"></div>
+                    <svg viewBox="0 0 120 160" class="w-20 h-28 stroke-emerald-400/80 fill-none group-hover:stroke-emerald-200 transition-colors duration-500" stroke-width="1.5">
+                        <rect x="10" y="10" width="100" height="140" rx="3" />
+                        <line x1="10" y1="80" x2="110" y2="80" stroke-dasharray="3 3" />
+                        <line x1="25" y1="10" x2="25" y2="150" />
+                        <line x1="95" y1="10" x2="95" y2="150" />
+                        <line x1="25" y1="45" x2="95" y2="45" />
+                        <line x1="25" y1="115" x2="95" y2="115" />
+                        <line x1="60" y1="45" x2="60" y2="115" />
+                    </svg>
+                    <span class="mt-4 text-[11px] font-mono-custom text-emerald-300 tracking-wider">[ Dominio Emocional & Lectura ]</span>
+                </div>
+                <div class="flex justify-between items-center pt-3 text-xs text-slate-400 border-t border-white/5 font-mono-custom">
+                    <span>Enfoque</span><span class="text-emerald-400">Punto a Punto</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 05 // DETRÁS DEL RUIDO -->
+        <section class="reveal-node glass-panel p-8 sm:p-12 relative overflow-hidden">
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
+                <div>
+                    <div class="badge-pill bg-sky-500/10 border border-sky-500/30 text-sky-300 mb-4">
+                        <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+                        <span>05 / El Anclaje</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-light text-white leading-snug">
+                        Detrás del Ruido.
+                    </h2>
+                </div>
+                <p class="text-slate-300 text-sm sm:text-base font-light max-w-lg leading-relaxed">
+                    Lo que queda cuando se apagan las pantallas y el murmullo de la ciudad. El espacio íntimo donde recupero mi centro.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- La Música -->
+                <div class="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-sky-400/40 transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="w-10 h-10 rounded-full bg-sky-500/10 flex items-center justify-center text-sky-400 mb-4" aria-hidden="true">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+                        </div>
+                        <h3 class="text-lg font-medium text-white mb-2">La Frecuencia</h3>
+                        <p class="text-xs text-slate-300 font-light leading-relaxed mb-4">
+                            Donde las voces del autoengaño se callan y el alma íntegra habla. Con los auriculares puestos, el caos se ordena, bajan las ideas más puras y me encuentro conmigo sin poses.
+                        </p>
+                    </div>
+                    <span class="text-[11px] font-mono-custom text-sky-400/70">Esencial // Mundo Interior</span>
+                </div>
+
+                <!-- Los Compañeros de Calma -->
+                <div class="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-purple-400/40 transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400 mb-4" aria-hidden="true">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+                        </div>
+                        <h3 class="text-lg font-medium text-white mb-2">Compañeros de Calma</h3>
+                        <p class="text-xs text-slate-300 font-light leading-relaxed mb-4">
+                            En un mundo acelerado, mis compañeros de cuatro patas son mi cable a tierra. No saben de algoritmos ni pantallas: su afecto es simple, transparente y un recordatorio de volver a lo esencial.
+                        </p>
+                    </div>
+                    <span class="text-[11px] font-mono-custom text-purple-400/70">Lealtad // Hogar & Presencia</span>
+                </div>
+
+                <!-- El Desahogo / Cuerpo y Juego -->
+                <div class="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-emerald-400/40 transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-4" aria-hidden="true">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
+                        </div>
+                        <h3 class="text-lg font-medium text-white mb-2">Cuerpo & Juego</h3>
+                        <p class="text-xs text-slate-300 font-light leading-relaxed mb-4">
+                            Mover el cuerpo para vaciar tensiones mentales y sumergirme en una buena historia o videojuego para desconectar. Jugar sin la obligación de producir, solo por el placer de explorar.
+                        </p>
+                    </div>
+                    <span class="text-[11px] font-mono-custom text-emerald-400/70">Desconexión // Volver al Origen</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 06 // CIERRE & PORTALES -->
+        <section class="reveal-node glass-panel p-8 sm:p-14 text-center relative overflow-hidden flex flex-col items-center">
+            <div class="badge-pill bg-sky-500/10 border border-sky-500/30 text-sky-300 mb-6">
+                <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+                <span>Diálogo & Sinergia</span>
+            </div>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-light text-white max-w-3xl mb-6 leading-tight">
+                Si algo de esto resuena contigo, conversemos.
+            </h2>
+            <p class="text-slate-300 text-sm sm:text-base max-w-2xl font-light leading-relaxed mb-10">
+                Creo en las coincidencias de miradas, en conspirar proyectos creativos y en construir cosas donde cada uno aporte lo mejor de su mundo.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-md">
+                <a href="mailto:tomasdavidhonor@gmail.com" class="btn-portal group w-full sm:w-auto">
+                    <span class="relative z-10">Escríbeme un Mensaje</span>
+                    <svg class="w-4 h-4 stroke-current fill-none relative z-10 transform group-hover:translate-x-1.5 transition-transform" viewBox="0 0 24 24" stroke-width="2">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+                
+                <a href="portfolio.html" class="btn-portal btn-portal-secondary group w-full sm:w-auto">
+                    <span class="relative z-10">Explorar Portfolio</span>
+                    <svg class="w-4 h-4 stroke-current fill-none relative z-10 transform group-hover:translate-x-1.5 transition-transform" viewBox="0 0 24 24" stroke-width="2">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL CINEMATOGRÁFICO DE REPRODUCCIÓN -->
+    <div id="video-modal" class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 backdrop-blur-2xl bg-[#06080F]/90 p-4 sm:p-8" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="w-full max-w-4xl flex flex-col gap-3 scale-95 transition-transform duration-300" id="modal-content">
+            
+            <!-- Barra superior del cine -->
+            <div class="flex items-center justify-between px-2 text-white">
+                <div class="flex items-center gap-3">
+                    <span id="modal-video-tag" class="text-[11px] font-mono-custom uppercase tracking-widest text-sky-400">01 // Atmósfera</span>
+                    <span class="text-slate-600 font-mono-custom">•</span>
+                    <h3 id="modal-video-title" class="text-sm sm:text-base font-medium text-slate-200">El Reflejo Virtual</h3>
+                </div>
+                <button id="close-modal-btn" class="w-9 h-9 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-sky-400 hover:bg-white/10 transition-all focus:outline-none focus:ring-2 focus:ring-sky-400 cursor-pointer" aria-label="Cerrar reproductor">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <!-- Marco del reproductor -->
+            <div class="w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-[0_0_60px_rgba(56,189,248,0.2)] border border-white/10 relative flex items-center justify-center">
+                <video id="video-player" class="w-full h-full relative z-10" controls controlsList="nodownload" playsinline preload="metadata">
+                    Tu navegador no soporta la reproducción de video.
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const body = document.body;
+        const heroHeader = document.getElementById('hero-header');
+        let introCompleted = false;
+
+        // Desbloqueo cinematográfico de la experiencia
+        function unlockExperience() {
+            if (introCompleted) return;
+            introCompleted = true;
+            
+            const cx = window.innerWidth / 2;
+            const cy = window.innerHeight / 2;
+            triggerElectricBurst(cx, cy, 14);
+            
+            heroHeader.classList.remove('is-intro');
+            
+            setTimeout(() => {
+                body.classList.remove('scroll-locked');
+            }, 1600);
+        }
+
+        window.addEventListener('wheel', unlockExperience, { once: true, passive: true });
+        window.addEventListener('touchmove', unlockExperience, { once: true, passive: true });
+        
+        const emblemTrigger = document.getElementById('emblem-trigger');
+        if (emblemTrigger) {
+            emblemTrigger.addEventListener('click', unlockExperience);
+            emblemTrigger.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    unlockExperience();
+                }
+            });
+        }
+
+        const introHint = document.getElementById('intro-hint');
+        if (introHint) {
+            introHint.addEventListener('click', unlockExperience);
+        }
+
+        // Canvas de Rayos Eléctricos con soporte Retina / High-DPI
+        const canvas = document.getElementById('fx-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        let dpr = window.devicePixelRatio || 1;
+
+        function resizeCanvas() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            dpr = window.devicePixelRatio || 1;
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            ctx.resetTransform();
+            ctx.scale(dpr, dpr);
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class LightningBolt {
+            constructor(x1, y1, x2, y2) {
+                this.x1 = x1;
+                this.y1 = y1;
+                this.x2 = x2;
+                this.y2 = y2;
+                this.alpha = 1;
+                this.segments = [];
+                this.build();
+            }
+
+            build() {
+                const diffX = this.x2 - this.x1;
+                const diffY = this.y2 - this.y1;
+                const dist = Math.hypot(diffX, diffY);
+                const steps = Math.max(4, Math.floor(dist / 14));
+                
+                let curX = this.x1;
+                let curY = this.y1;
+                this.segments.push({ x: curX, y: curY });
+
+                for (let i = 1; i < steps; i++) {
+                    const progress = i / steps;
+                    const targetX = this.x1 + diffX * progress;
+                    const targetY = this.y1 + diffY * progress;
+                    const jitter = (Math.random() - 0.5) * 36;
+                    curX = targetX + jitter;
+                    curY = targetY + jitter;
+                    this.segments.push({ x: curX, y: curY });
+                }
+                this.segments.push({ x: this.x2, y: this.y2 });
+            }
+
+            draw() {
+                if (this.segments.length < 2) return;
+                ctx.save();
+                
+                // Resplandor cian
+                ctx.strokeStyle = `rgba(56, 189, 248, ${this.alpha * 0.9})`;
+                ctx.lineWidth = 3.2;
+                ctx.shadowColor = '#00D4FF';
+                ctx.shadowBlur = 18;
+                
+                ctx.beginPath();
+                ctx.moveTo(this.segments[0].x, this.segments[0].y);
+                for (let i = 1; i < this.segments.length; i++) {
+                    ctx.lineTo(this.segments[i].x, this.segments[i].y);
+                }
+                ctx.stroke();
+
+                // Núcleo blanco fino
+                ctx.shadowBlur = 0;
+                ctx.strokeStyle = `rgba(255, 255, 255, ${this.alpha})`;
+                ctx.lineWidth = 1.2;
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            update() {
+                this.alpha -= 0.045;
+            }
+        }
+
+        let bolts = [];
+
+        function triggerElectricBurst(originX, originY, amount = 5) {
+            for (let i = 0; i < amount; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const length = 90 + Math.random() * 160;
+                const destX = originX + Math.cos(angle) * length;
+                const destY = originY + Math.sin(angle) * length;
+                bolts.push(new LightningBolt(originX, originY, destX, destY));
+            }
+        }
+
+        // Descargas periódicas sutiles alrededor del emblema
+        setInterval(() => {
+            if (!emblemTrigger || !introCompleted || document.hidden) return;
+            const rect = emblemTrigger.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            if (cy > -100 && cy < window.innerHeight + 100) {
+                triggerElectricBurst(cx, cy, 3);
+            }
+        }, 3800);
+
+        function animateFX() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = bolts.length - 1; i >= 0; i--) {
+                bolts[i].update();
+                bolts[i].draw();
+                if (bolts[i].alpha <= 0) bolts.splice(i, 1);
+            }
+            requestAnimationFrame(animateFX);
+        }
+        animateFX();
+
+        // Spotlight reactivo al cursor
+        const spotlight = document.getElementById('spotlight');
+        if (window.innerWidth >= 992 && spotlight) {
+            window.addEventListener('mousemove', (e) => {
+                spotlight.style.left = `${e.clientX}px`;
+                spotlight.style.top = `${e.clientY}px`;
+            }, { passive: true });
+        }
+
+        // Animación al hacer scroll (Reveal)
+        const revealElements = document.querySelectorAll('.reveal-node');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+        revealElements.forEach(el => observer.observe(el));
+
+        // Gestión de sonido en reels individuales
+        const inlineVideos = document.querySelectorAll('.inline-reel-video');
+        const soundButtons = document.querySelectorAll('.card-sound-btn');
+
+        function updateSoundButtonVisual(btn, isMuted) {
+            if (isMuted) {
+                btn.classList.remove('is-active');
+            } else {
+                btn.classList.add('is-active');
+            }
+        }
+
+        soundButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const card = btn.closest('.reel-card');
+                const video = card ? card.querySelector('video') : null;
+                if (!video) return;
+
+                const willMute = !video.muted;
+                if (!willMute) {
+                    // Silenciar todos los demás videos activos
+                    inlineVideos.forEach(otherVideo => {
+                        if (otherVideo !== video) {
+                            otherVideo.muted = true;
+                            const otherBtn = otherVideo.closest('.reel-card')?.querySelector('.card-sound-btn');
+                            if (otherBtn) updateSoundButtonVisual(otherBtn, true);
+                        }
+                    });
+                    video.muted = false;
+                    video.play().catch(() => {});
+                    updateSoundButtonVisual(btn, false);
+                } else {
+                    video.muted = true;
+                    updateSoundButtonVisual(btn, true);
+                }
+            });
+        });
+
+        // Ahorro de recursos y batería: pausar videos no visibles
+        const videoVisibilityObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target;
+                if (entry.isIntersecting) {
+                    video.play().catch(() => {});
+                } else {
+                    video.pause();
+                }
+            });
+        }, { threshold: 0.25 });
+
+        inlineVideos.forEach(v => videoVisibilityObserver.observe(v));
+
+        // Modal de Video Expandido
+        const videoModal = document.getElementById('video-modal');
+        const videoPlayer = document.getElementById('video-player');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const modalTitle = document.getElementById('modal-video-title');
+        const modalTag = document.getElementById('modal-video-tag');
+        let activeCardVideo = null;
+
+        function openVideoModal(card) {
+            if (!card || !videoPlayer || !videoModal) return;
+            const src = card.getAttribute('data-video-src');
+            const title = card.getAttribute('data-video-title');
+            const tag = card.getAttribute('data-video-tag');
+            const cardVideo = card.querySelector('video');
+
+            activeCardVideo = cardVideo;
+            if (cardVideo) cardVideo.pause();
+
+            videoPlayer.src = src;
+            if (cardVideo && !isNaN(cardVideo.currentTime)) {
+                videoPlayer.currentTime = cardVideo.currentTime;
+            }
+            if (modalTitle) modalTitle.textContent = title || 'Video';
+            if (modalTag) modalTag.textContent = tag || '';
+
+            videoModal.classList.add('is-active');
+            videoModal.setAttribute('aria-hidden', 'false');
+            videoPlayer.play().catch(() => {});
+        }
+
+        function closeVideoModal() {
+            if (!videoModal) return;
+            videoModal.classList.remove('is-active');
+            videoModal.setAttribute('aria-hidden', 'true');
+            if (videoPlayer) {
+                if (activeCardVideo) {
+                    if (!isNaN(videoPlayer.currentTime)) {
+                        activeCardVideo.currentTime = videoPlayer.currentTime;
+                    }
+                    activeCardVideo.play().catch(() => {});
+                }
+                videoPlayer.pause();
+                videoPlayer.removeAttribute('src');
+                videoPlayer.load();
+            }
+            activeCardVideo = null;
+        }
+
+        document.querySelectorAll('.reel-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('.card-sound-btn')) return;
+                openVideoModal(card);
+            });
+
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    if (e.target.closest('.card-sound-btn')) return;
+                    e.preventDefault();
+                    openVideoModal(card);
+                }
+            });
+        });
+
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', closeVideoModal);
+        }
+
+        if (videoModal) {
+            videoModal.addEventListener('click', (e) => {
+                if (e.target === videoModal) closeVideoModal();
+            });
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && videoModal && videoModal.classList.contains('is-active')) {
+                closeVideoModal();
+            }
+        });
+    </script>
+</body>
+</html>
