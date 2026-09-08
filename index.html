@@ -765,12 +765,255 @@
             100% { stroke-dashoffset: -160; opacity: 0.25; }
         }
 
+        /* Rotación base compartida por órbitas y agujas */
+        @keyframes spinSlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes corePulse {
+            0%, 100% { transform: scale(0.85); opacity: 0.7; }
+            50% { transform: scale(1.35); opacity: 1; }
+        }
+
+        /* Pulso viajero sobre la línea del tiempo */
+        .timeline-trace::after {
+            content: '';
+            position: absolute;
+            left: -2px;
+            width: 5px;
+            height: 110px;
+            border-radius: 9999px;
+            background: linear-gradient(to bottom, transparent, #38BDF8 45%, #C084FC 70%, transparent);
+            box-shadow: 0 0 16px 4px rgba(56, 189, 248, 0.3);
+            animation: traceTravel 16s linear infinite;
+        }
+
+        @keyframes traceTravel {
+            0% { top: -8%; opacity: 0; }
+            8% { opacity: 0.9; }
+            92% { opacity: 0.9; }
+            100% { top: 104%; opacity: 0; }
+        }
+
+        /* Latido suave en los puntos de las insignias */
+        .badge-pill > span:first-child {
+            animation: dotPulse 2.6s ease-in-out infinite;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { opacity: 0.55; transform: scale(0.85); }
+            50% { opacity: 1; transform: scale(1.15); }
+        }
+
+        /* 01 // Lente cósmico y 03 // Cápsula temporal */
+        .cosmos-lens {
+            width: 128px;
+            height: 128px;
+        }
+
+        .lens-ring-outer,
+        .lens-ring-inner,
+        .lens-orbit,
+        .lens-core,
+        .clock-hand-min,
+        .clock-hand-hour,
+        .time-ripple {
+            transform-origin: 60px 60px;
+        }
+
+        .lens-ring-outer { animation: spinSlow 26s linear infinite; }
+        .lens-ring-inner { animation: spinSlow 18s linear infinite reverse; }
+        .lens-orbit-a { animation: spinSlow 9s linear infinite; }
+        .lens-orbit-b { animation: spinSlow 14s linear infinite reverse; }
+        .lens-orbit-c { animation: spinSlow 20s linear infinite; }
+        .lens-core { animation: corePulse 2.8s ease-in-out infinite; }
+
+        .lens-shape {
+            stroke-dasharray: 230;
+            animation: lensTrace 7s ease-in-out infinite;
+        }
+
+        @keyframes lensTrace {
+            0% { stroke-dashoffset: 230; opacity: 0.35; }
+            45% { stroke-dashoffset: 0; opacity: 1; }
+            75% { stroke-dashoffset: 0; opacity: 1; }
+            100% { stroke-dashoffset: -230; opacity: 0.35; }
+        }
+
+        .clock-hand-min { animation: spinSlow 8s linear infinite; }
+        .clock-hand-hour { animation: spinSlow 48s linear infinite; }
+
+        .time-ripple { animation: rippleOut 4.5s ease-out infinite; }
+        .ripple-2 { animation-delay: 1.5s; }
+        .ripple-3 { animation-delay: 3s; }
+
+        @keyframes rippleOut {
+            0% { transform: scale(0.25); opacity: 0.8; }
+            100% { transform: scale(1.15); opacity: 0; }
+        }
+
+        /* Escaneo cinematográfico detrás de la retícula de videos */
+        .cinema-scan {
+            position: absolute;
+            inset: 0;
+            border-radius: 22px;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .cinema-scan::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 150px;
+            background: linear-gradient(to bottom, transparent, rgba(56, 189, 248, 0.13) 50%, transparent);
+            animation: scanSweep 7.5s ease-in-out infinite;
+        }
+
+        @keyframes scanSweep {
+            0% { top: -150px; }
+            100% { top: 100%; }
+        }
+
+        /* 02 // Luz, sombra y encuentro */
+        .facet-visual {
+            width: 100%;
+            height: 54px;
+            margin-top: 1.25rem;
+            overflow: visible;
+        }
+
+        .ray-group,
+        .ray-core {
+            transform-origin: 30px 27px;
+        }
+
+        .ray-group { animation: spinSlow 11s linear infinite; }
+        .ray-core { animation: corePulse 2.4s ease-in-out infinite; }
+
+        .eclipse-shadow { animation: eclipseCross 6s ease-in-out infinite; }
+
+        @keyframes eclipseCross {
+            0%, 100% { transform: translateX(-27px); }
+            50% { transform: translateX(15px); }
+        }
+
+        .venn-left { animation: vennConverge 5s ease-in-out infinite; }
+        .venn-right { animation: vennConverge 5s ease-in-out infinite reverse; }
+        .venn-core { animation: vennGlow 5s ease-in-out infinite; }
+
+        @keyframes vennConverge {
+            0%, 100% { transform: translateX(-9px); }
+            50% { transform: translateX(0); }
+        }
+
+        @keyframes vennGlow {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 0.55; }
+        }
+
+        /* 04 // Rally en la cancha */
+        .rally-ball {
+            animation: rallyPath 5.6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+        }
+
+        @keyframes rallyPath {
+            0%   { transform: translate(0, 0); }
+            25%  { transform: translate(28px, -52px); }
+            50%  { transform: translate(-14px, -104px); }
+            75%  { transform: translate(24px, -50px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        .rally-trail {
+            stroke-dasharray: 6 8;
+            animation: trailDrift 1.8s linear infinite;
+        }
+
+        @keyframes trailDrift {
+            to { stroke-dashoffset: -14; }
+        }
+
+        .court-net { animation: netShimmer 3.4s ease-in-out infinite; }
+
+        @keyframes netShimmer {
+            0%, 100% { opacity: 0.35; }
+            50% { opacity: 0.9; }
+        }
+
+        /* 06 // Portal de cierre */
+        .portal-rings {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 420px;
+            height: 420px;
+            max-width: 90vw;
+            max-height: 90vw;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .portal-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            animation: portalOut 6s ease-out infinite;
+        }
+
+        .portal-ring:nth-child(2) {
+            animation-delay: 2s;
+            border-color: rgba(192, 132, 252, 0.32);
+        }
+
+        .portal-ring:nth-child(3) {
+            animation-delay: 4s;
+            border-color: rgba(52, 211, 153, 0.28);
+        }
+
+        @keyframes portalOut {
+            0% { transform: scale(0.35); opacity: 0; }
+            18% { opacity: 0.7; }
+            100% { transform: scale(1.05); opacity: 0; }
+        }
+
         @media (prefers-reduced-motion: reduce) {
             .freq-bar,
             .paw-icon,
-            .pulse-line path {
+            .pulse-line path,
+            .timeline-trace::after,
+            .badge-pill > span:first-child,
+            .lens-ring-outer,
+            .lens-ring-inner,
+            .lens-orbit-a,
+            .lens-orbit-b,
+            .lens-orbit-c,
+            .lens-core,
+            .lens-shape,
+            .clock-hand-min,
+            .clock-hand-hour,
+            .time-ripple,
+            .cinema-scan::before,
+            .ray-group,
+            .ray-core,
+            .eclipse-shadow,
+            .venn-left,
+            .venn-right,
+            .venn-core,
+            .rally-ball,
+            .rally-trail,
+            .court-net,
+            .portal-ring {
                 animation: none !important;
             }
+
+            .venn-core { opacity: 0.4 !important; }
+            .time-ripple { opacity: 0.25 !important; }
         }
 
         /* Modal Cinematográfico */
@@ -953,12 +1196,16 @@
             <div class="lg:col-span-5 glass-panel p-6 min-h-[320px] flex flex-col justify-between relative group" aria-hidden="true">
                 <div class="h-56 flex flex-col items-center justify-center relative p-6">
                     <div class="absolute inset-0 bg-gradient-to-tr from-sky-500/10 to-transparent rounded-2xl"></div>
-                    <svg viewBox="0 0 120 120" class="w-24 h-24 stroke-sky-400/80 fill-none group-hover:stroke-sky-200 transition-colors duration-500" stroke-width="1.5">
-                        <circle cx="60" cy="60" r="45" stroke-dasharray="3 3" class="opacity-40" />
-                        <path d="M 60,25 C 40,25 35,45 35,60 C 35,75 45,95 60,95 C 75,95 85,75 85,60 C 85,45 80,25 60,25 Z" />
-                        <line x1="60" y1="20" x2="60" y2="100" class="opacity-50" />
-                        <line x1="20" y1="60" x2="100" y2="60" class="opacity-50" />
-                        <circle cx="60" cy="60" r="4" fill="#38BDF8" />
+                    <svg viewBox="0 0 120 120" class="cosmos-lens stroke-sky-400/80 fill-none group-hover:stroke-sky-200 transition-colors duration-500" stroke-width="1.5">
+                        <circle class="lens-ring-outer" cx="60" cy="60" r="53" stroke-dasharray="2 7" opacity="0.3" />
+                        <circle class="lens-ring-inner" cx="60" cy="60" r="45" stroke-dasharray="3 3" opacity="0.4" />
+                        <path class="lens-shape" d="M 60,25 C 40,25 35,45 35,60 C 35,75 45,95 60,95 C 75,95 85,75 85,60 C 85,45 80,25 60,25 Z" />
+                        <line x1="60" y1="20" x2="60" y2="100" opacity="0.35" />
+                        <line x1="20" y1="60" x2="100" y2="60" opacity="0.35" />
+                        <g class="lens-orbit lens-orbit-a"><circle cx="60" cy="7" r="2.4" fill="#38BDF8" stroke="none" /></g>
+                        <g class="lens-orbit lens-orbit-b"><circle cx="60" cy="15" r="1.8" fill="#C084FC" stroke="none" /></g>
+                        <g class="lens-orbit lens-orbit-c"><circle cx="60" cy="113" r="1.6" fill="#34D399" stroke="none" /></g>
+                        <circle class="lens-core" cx="60" cy="60" r="4" fill="#38BDF8" stroke="none" />
                     </svg>
                     <span class="mt-4 text-[11px] font-mono-custom text-sky-300 tracking-wider">[ Imaginación & Estructura ]</span>
                 </div>
@@ -989,6 +1236,7 @@
 
             <!-- Marco Cinematográfico Contenedor -->
             <div class="cinema-showcase-frame">
+                <div class="cinema-scan" aria-hidden="true"></div>
                 <div class="cinema-grid">
                     
                     <!-- Tarjeta 1 -->
@@ -1143,6 +1391,19 @@
                     <p class="text-xs text-slate-400 leading-relaxed font-light">
                         La intuición rápida, la pasión por ver conexiones donde otros ven puntos aislados, y el impulso imparable de materializar proyectos.
                     </p>
+                    <svg class="facet-visual" viewBox="0 0 60 54" aria-hidden="true">
+                        <g class="ray-group" stroke="#38BDF8" stroke-width="1.4" stroke-linecap="round" opacity="0.7">
+                            <line x1="30" y1="5" x2="30" y2="13" />
+                            <line x1="30" y1="41" x2="30" y2="49" />
+                            <line x1="8" y1="27" x2="16" y2="27" />
+                            <line x1="44" y1="27" x2="52" y2="27" />
+                            <line x1="14" y1="11" x2="20" y2="17" />
+                            <line x1="40" y1="37" x2="46" y2="43" />
+                            <line x1="46" y1="11" x2="40" y2="17" />
+                            <line x1="20" y1="37" x2="14" y2="43" />
+                        </g>
+                        <circle class="ray-core" cx="30" cy="27" r="5" fill="#38BDF8" opacity="0.85" />
+                    </svg>
                 </div>
 
                 <div class="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-purple-400/40 transition-all">
@@ -1151,6 +1412,16 @@
                     <p class="text-xs text-slate-400 leading-relaxed font-light">
                         Los momentos de duda, el cansancio mental de sobrepensar y la necesidad de pausar para no quemarme en mi propio fuego.
                     </p>
+                    <svg class="facet-visual" viewBox="0 0 60 54" aria-hidden="true">
+                        <defs>
+                            <clipPath id="eclipseClip"><circle cx="30" cy="27" r="15" /></clipPath>
+                        </defs>
+                        <circle cx="30" cy="27" r="15" fill="#C084FC" opacity="0.14" />
+                        <circle cx="30" cy="27" r="15" fill="none" stroke="#C084FC" stroke-width="1.4" opacity="0.65" />
+                        <g clip-path="url(#eclipseClip)">
+                            <circle class="eclipse-shadow" cx="30" cy="27" r="15" fill="#080B14" opacity="0.92" />
+                        </g>
+                    </svg>
                 </div>
 
                 <div class="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-emerald-400/40 transition-all">
@@ -1159,6 +1430,11 @@
                     <p class="text-xs text-slate-400 leading-relaxed font-light">
                         El alivio de no tener que saberlo todo. Buscar personas que aporten lo que a mí me falta y brindar con generosidad lo que yo traigo a la mesa.
                     </p>
+                    <svg class="facet-visual" viewBox="0 0 60 54" aria-hidden="true">
+                        <ellipse class="venn-core" cx="30" cy="27" rx="5" ry="10" fill="#34D399" opacity="0" />
+                        <circle class="venn-left" cx="26" cy="27" r="12" fill="none" stroke="#34D399" stroke-width="1.4" opacity="0.7" />
+                        <circle class="venn-right" cx="34" cy="27" r="12" fill="none" stroke="#38BDF8" stroke-width="1.4" opacity="0.7" />
+                    </svg>
                 </div>
             </div>
         </section>
@@ -1168,12 +1444,15 @@
             <div class="lg:col-span-5 order-2 lg:order-1 glass-panel p-6 min-h-[320px] flex flex-col justify-between relative group" aria-hidden="true">
                 <div class="h-56 flex flex-col items-center justify-center relative p-6">
                     <div class="absolute inset-0 bg-gradient-to-tl from-purple-500/10 to-transparent rounded-2xl"></div>
-                    <svg viewBox="0 0 120 120" class="w-24 h-24 stroke-purple-400/80 fill-none group-hover:stroke-purple-200 transition-colors duration-500" stroke-width="1.5">
-                        <circle cx="60" cy="60" r="46" stroke-dasharray="3 3" class="opacity-30" />
-                        <circle cx="60" cy="60" r="3" fill="#C084FC" />
-                        <line x1="60" y1="32" x2="60" y2="60" stroke-linecap="round" />
-                        <line x1="60" y1="60" x2="78" y2="68" stroke-linecap="round" />
-                        <rect x="22" y="32" width="76" height="56" rx="12" class="opacity-40" stroke-dasharray="4 2" />
+                    <svg viewBox="0 0 120 120" class="cosmos-lens stroke-purple-400/80 fill-none group-hover:stroke-purple-200 transition-colors duration-500" stroke-width="1.5">
+                        <circle class="time-ripple ripple-1" cx="60" cy="60" r="46" fill="none" stroke="#C084FC" stroke-width="1" />
+                        <circle class="time-ripple ripple-2" cx="60" cy="60" r="46" fill="none" stroke="#C084FC" stroke-width="1" />
+                        <circle class="time-ripple ripple-3" cx="60" cy="60" r="46" fill="none" stroke="#C084FC" stroke-width="1" />
+                        <circle cx="60" cy="60" r="46" stroke-dasharray="3 3" opacity="0.3" />
+                        <rect x="22" y="32" width="76" height="56" rx="12" opacity="0.4" stroke-dasharray="4 2" />
+                        <line class="clock-hand-min" x1="60" y1="32" x2="60" y2="60" stroke-linecap="round" />
+                        <line class="clock-hand-hour" x1="60" y1="60" x2="78" y2="68" stroke-linecap="round" />
+                        <circle class="lens-core" cx="60" cy="60" r="3.4" fill="#C084FC" stroke="none" />
                     </svg>
                     <span class="mt-4 text-[11px] font-mono-custom text-purple-300 tracking-wider">[ Cápsula Temporal // Huella Viva ]</span>
                 </div>
@@ -1233,14 +1512,16 @@
             <div class="lg:col-span-5 glass-panel p-6 min-h-[320px] flex flex-col justify-between relative group" aria-hidden="true">
                 <div class="h-56 flex flex-col items-center justify-center relative p-6">
                     <div class="absolute inset-0 bg-gradient-to-tr from-emerald-500/10 to-transparent rounded-2xl"></div>
-                    <svg viewBox="0 0 120 160" class="w-20 h-28 stroke-emerald-400/80 fill-none group-hover:stroke-emerald-200 transition-colors duration-500" stroke-width="1.5">
+                    <svg viewBox="0 0 120 160" class="w-24 h-32 stroke-emerald-400/80 fill-none group-hover:stroke-emerald-200 transition-colors duration-500" stroke-width="1.5">
                         <rect x="10" y="10" width="100" height="140" rx="3" />
-                        <line x1="10" y1="80" x2="110" y2="80" stroke-dasharray="3 3" />
-                        <line x1="25" y1="10" x2="25" y2="150" />
-                        <line x1="95" y1="10" x2="95" y2="150" />
-                        <line x1="25" y1="45" x2="95" y2="45" />
-                        <line x1="25" y1="115" x2="95" y2="115" />
-                        <line x1="60" y1="45" x2="60" y2="115" />
+                        <line class="court-net" x1="10" y1="80" x2="110" y2="80" stroke-dasharray="3 3" />
+                        <line x1="25" y1="10" x2="25" y2="150" opacity="0.7" />
+                        <line x1="95" y1="10" x2="95" y2="150" opacity="0.7" />
+                        <line x1="25" y1="45" x2="95" y2="45" opacity="0.7" />
+                        <line x1="25" y1="115" x2="95" y2="115" opacity="0.7" />
+                        <line x1="60" y1="45" x2="60" y2="115" opacity="0.7" />
+                        <path class="rally-trail" d="M 42,138 C 80,112 30,74 28,34" fill="none" stroke="#34D399" stroke-width="1" opacity="0.4" />
+                        <circle class="rally-ball" cx="42" cy="138" r="3.2" fill="#34D399" stroke="none" />
                     </svg>
                     <span class="mt-4 text-[11px] font-mono-custom text-emerald-300 tracking-wider">[ Dominio Emocional & Lectura ]</span>
                 </div>
@@ -1332,18 +1613,24 @@
 
         <!-- 06 // CIERRE & PORTALES -->
         <section class="reveal-node glass-panel p-8 sm:p-14 text-center relative overflow-hidden flex flex-col items-center">
-            <div class="badge-pill bg-sky-500/10 border border-sky-500/30 text-sky-300 mb-6">
+            <div class="portal-rings" aria-hidden="true">
+                <div class="portal-ring"></div>
+                <div class="portal-ring"></div>
+                <div class="portal-ring"></div>
+            </div>
+
+            <div class="badge-pill bg-sky-500/10 border border-sky-500/30 text-sky-300 mb-6 relative z-10">
                 <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
                 <span>Diálogo & Sinergia</span>
             </div>
-            <h2 class="text-3xl sm:text-4xl md:text-5xl font-light text-white max-w-3xl mb-6 leading-tight">
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-light text-white max-w-3xl mb-6 leading-tight relative z-10">
                 Si algo de esto resuena contigo, conversemos.
             </h2>
-            <p class="text-slate-300 text-sm sm:text-base max-w-2xl font-light leading-relaxed mb-10">
+            <p class="text-slate-300 text-sm sm:text-base max-w-2xl font-light leading-relaxed mb-10 relative z-10">
                 Creo en las coincidencias de miradas, en conspirar proyectos creativos y en construir cosas donde cada uno aporte lo mejor de su mundo.
             </p>
-            
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-md">
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-md relative z-10">
                 <a href="mailto:tomasdavidhonor@gmail.com" class="btn-portal group w-full sm:w-auto">
                     <span class="relative z-10">Escríbeme un Mensaje</span>
                     <svg class="w-4 h-4 stroke-current fill-none relative z-10 transform group-hover:translate-x-1.5 transition-transform" viewBox="0 0 24 24" stroke-width="2">
