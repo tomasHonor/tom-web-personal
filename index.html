@@ -1834,9 +1834,22 @@
         // Spotlight reactivo al cursor
         const spotlight = document.getElementById('spotlight');
         if (window.innerWidth >= 992 && spotlight) {
+            // Mover con transform (compositor) en vez de left/top (layout),
+            // y agrupar todos los eventos de un mismo cuadro en un único
+            // requestAnimationFrame en vez de escribir estilos en cada
+            // mousemove crudo (que puede ser cientos de eventos/seg).
+            let mouseX = 0, mouseY = 0, mouseQueued = false;
+            function flushSpotlight() {
+                mouseQueued = false;
+                spotlight.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+            }
             window.addEventListener('mousemove', (e) => {
-                spotlight.style.left = `${e.clientX}px`;
-                spotlight.style.top = `${e.clientY}px`;
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                if (!mouseQueued) {
+                    mouseQueued = true;
+                    requestAnimationFrame(flushSpotlight);
+                }
             }, { passive: true });
         }
 
