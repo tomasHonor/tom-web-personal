@@ -1219,18 +1219,14 @@
         <section class="reveal-node relative">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
                 <div>
-                    <div class="badge-pill bg-sky-500/10 border border-sky-500/30 text-sky-300 mb-3">
-                        <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
-                        <span>Muestra</span>
-                    </div>
-                    <h3 class="text-2xl sm:text-3xl font-light text-white">Videos con IA.</h3>
+                    <h3 class="text-2xl sm:text-3xl font-light text-white">Mural de exploración.</h3>
                     <p class="text-slate-400 text-xs sm:text-sm font-light mt-1 max-w-xl">
-                        Una muestra de lo que hago con inteligencia artificial: clips sueltos, sin orden ni un fin específico. Activá el sonido de cada uno o hacé clic para verlo en grande.
+                        Videos que hago con inteligencia artificial. Sueltos, sin orden y sin un fin específico.
                     </p>
                 </div>
                 <div class="hidden sm:flex items-center gap-2 text-slate-400 font-mono-custom text-xs">
                     <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
-                    <span class="text-[11px] tracking-wider uppercase">Y se van sumando más</span>
+                    <span class="text-[11px] tracking-wider uppercase">Se sigue sumando.</span>
                 </div>
             </div>
 
@@ -1565,7 +1561,7 @@
             <!-- Barra superior del cine -->
             <div class="flex items-center justify-between px-2 text-white">
                 <div class="flex items-center gap-3">
-                    <span id="modal-video-tag" class="text-[11px] font-mono-custom uppercase tracking-widest text-sky-400">Muestra</span>
+                    <span id="modal-video-tag" class="text-[11px] font-mono-custom uppercase tracking-widest text-sky-400">Exploración</span>
                     <span class="text-slate-600 font-mono-custom">•</span>
                     <h3 id="modal-video-title" class="text-sm sm:text-base font-medium text-slate-200">El Reflejo Virtual</h3>
                 </div>
@@ -1873,7 +1869,7 @@
                 videoPlayer.currentTime = cardVideo.currentTime;
             }
             if (modalTitle) modalTitle.textContent = title || 'Video';
-            if (modalTag) modalTag.textContent = tag || 'Muestra';
+            if (modalTag) modalTag.textContent = tag || 'Exploración';
 
             videoModal.classList.add('is-active');
             videoModal.setAttribute('aria-hidden', 'false');
